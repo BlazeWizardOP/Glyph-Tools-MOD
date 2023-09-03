@@ -10,6 +10,7 @@
 - This Tool Is Not Owned By Me... Original Project Credits Are [Here](https://github.com/SebiAi/custom-nothing-glyph-tools)
 - You Can Re-Modify This Tool, After Appropriate Credits To Modifier  & Owner For No Copyright issues.
 - Any Kinds Of Tutorials Here Are Just Dedicated For Windows User, rest idk
+- By chance you're here in search of building your own stuff but you are using another OS you may redirect to orignal author's repository where you may find support for another OS!
 
 ## Information
 - Last Modified On: 03/09/2023
