@@ -159,27 +159,27 @@ for m in metadata_to_remove:
 ffmpeg_command += ['-metadata:s:a:0', f"{m}="]
 ffmpeg_command += ['-fflags', '+bitexact', '-flags:v', '+bitexact', '-flags:a', '+bitexact', tmp_file]
 
-        # Run new ffmpeg command
-        subprocess.run(ffmpeg_command)
+# Run new ffmpeg command
+subprocess.run(ffmpeg_command)
 
-        # Delete the metadata file
-        os.remove(metadata_file)
-    else:
-        subprocess.run(ffmpeg_command)
+# Delete the metadata file
+os.remove(metadata_file)
+else:
+subprocess.run(ffmpeg_command)
     
-    # Delete the old file - needed for Windows or else os.rename() will fail
-    os.remove(file)
+# Delete the old file - needed for Windows or else os.rename() will fail
+os.remove(file)
 
-    # Copy back the file
-    os.rename(tmp_file, file)
+# Copy back the file
+os.rename(tmp_file, file)
 
 
 # Get the length of the watermark data
 def watermark_get_length(watermarkData: bytes) -> int:
-    to = watermarkData.find(b',', 5)
-    if to == -1:
-        printCriticalError("Watermark length could not be found. Please check the file.")
-    return int(watermarkData[5:to])
+to = watermarkData.find(b',', 5)
+if to == -1:
+printCriticalError("Watermark length could not be found. Please check the file.")
+return int(watermarkData[5:to])
 
 # Returns the decoded watermark
 def decode_watermark(watermarkData: bytes) -> str:
