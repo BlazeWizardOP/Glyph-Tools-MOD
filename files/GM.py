@@ -71,23 +71,23 @@ printCriticalError(f"ffprobe could not be found. ({ffprobe})")
 
 # Perform argument checks
 def performChecks(args: dict):
-    # Check if the file exists
-    if not os.path.isfile(args['FILE'][0]):
-        raise Exception(f"File does not exist: '{args['FILE'][0]}'")
+# Check if the file exists
+if not os.path.isfile(args['FILE'][0]):
+raise Exception(f"File does not exist: '{args['FILE'][0]}'")
 
-    # Check if we need to write the metadata back
-    if args.get('w', False):
-        # Check if the file exists
-        if not os.path.isfile(args['w'][0]):
-            raise Exception(f"AUTHOR file does not exist: '{args['w'][0]}'")
-        if not os.path.isfile(args['w'][1]):
-            raise Exception(f"CUSTOM1 file does not exist: '{args['w'][1]}'")
+# Check if we need to write the metadata back
+if args.get('w', False):
+# Check if the file exists
+if not os.path.isfile(args['w'][0]):
+raise Exception(f"AUTHOR file does not exist: '{args['w'][0]}'")
+if not os.path.isfile(args['w'][1]):
+raise Exception(f"CUSTOM1 file does not exist: '{args['w'][1]}'")
 
 # Print critical error message and exit
 def printCriticalError(message: str, exitCode: int = 1):
-    printError(message)
-    #raise Exception(message)
-    sys.exit(exitCode)
+printError(message)
+# raise Exception(message)
+sys.exit(exitCode)
 
 # Print error message
 def printError(message, start: str = ""):
@@ -414,9 +414,9 @@ def main() -> int:
     return 0
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except KeyboardInterrupt:
-        printCriticalError("Interrupted by user.", 130)
-    # except Exception as e:
-    #     printCriticalError(str(e))
+try:
+sys.exit(main())
+except KeyboardInterrupt:
+printCriticalError("Interrupted by user.", 130)
+# except Exception as e:
+#     printCriticalError(str(e))
