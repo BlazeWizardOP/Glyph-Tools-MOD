@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 
 # +--------------------------------+
+# |                                |
 # |   Glyph Modder Python Script   |
 # |     Developed By: @SebiAi      |
 # |   Modified By: @BlazeWizardOP  |
+# |                                |
 # +--------------------------------+
 
 import base64
