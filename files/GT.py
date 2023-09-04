@@ -304,39 +304,39 @@ def audacity_to_glyphs(file: str, disableCompatibility: bool = False, watermarkP
     if watermarkPath:
         watermarkData = encode_watermark_from_file(watermarkPath, len(author_data[0]))
 
-    # Write the AUTHOR file
-    with open(f"{filename}.glypha", "w", newline='') as authorFile:
-        csvWriter = csv.writer(authorFile, delimiter=',', lineterminator=',\r\n', strict=True)
-        csvWriter.writerows(author_data)
-        if watermarkPath:
-            csvWriter.writerows(watermarkData)
-            printInfo("Embeded watermark into the glypha file.", start="\n")
+# Write the AUTHOR file
+with open(f"{filename}.glypha", "w", newline='') as authorFile:
+csvWriter = csv.writer(authorFile, delimiter=',', lineterminator=',\r\n', strict=True)
+csvWriter.writerows(author_data)
+if watermarkPath:
+csvWriter.writerows(watermarkData)
+printInfo("Embeded watermark into the glypha file.", start="\n")
 
 # Encode the watermark to the AUTHOR format from a file
 def encode_watermark_from_file(watermarkPath: str, numColumns: int) -> list[list[int]]:
-    # Read the watermark file
-    with open(watermarkPath, "rb") as watermarkFile:
-        watermark: bytes = zlib.compress(watermarkFile.read(), zlib.Z_BEST_COMPRESSION)
+# Read the watermark file
+with open(watermarkPath, "rb") as watermarkFile:
+watermark: bytes = zlib.compress(watermarkFile.read(), zlib.Z_BEST_COMPRESSION)
     
-    output: list[list[int]] = [[0 for x in range(numColumns)]]
-    # Add header
-    output[0][0] = 4081
-    output[0][1] = len(watermark)
-    # Process the watermark
-    for i, byte in enumerate(watermark):
-        # Offset i by 2 because of the header
-        i += 2
-        # Calculate the row and column
-        row = int(i / numColumns)
-        column = i % numColumns
-        # Check if we need a new row
-        if len(output) <= row:
-            output.append([0 for x in range(numColumns)])
-        # Write the byte
-        output[row][column] = byte
+output: list[list[int]] = [[0 for x in range(numColumns)]]
+# Add header
+output[0][0] = 4081
+output[0][1] = len(watermark)
+# Process the watermark
+for i, byte in enumerate(watermark):
+# Offset i by 2 because of the header
+i += 2
+# Calculate the row and column
+row = int(i / numColumns)
+column = i % numColumns
+# Check if we need a new row
+if len(output) <= row:
+output.append([0 for x in range(numColumns)])
+# Write the byte
+output[row][column] = byte
     
-    # Return the output
-    return output
+# Return the output
+return output
 
 
 # +------------------------------------+
@@ -346,29 +346,29 @@ def encode_watermark_from_file(watermarkPath: str, numColumns: int) -> list[list
 # +------------------------------------+
 
 def main() -> int:
-    # Parse the arguments
-    args = buildArgumentsParser().parse_args()
+# Parse the arguments
+args = buildArgumentsParser().parse_args()
 
-    # Check the requirements
-    checkRequirements()
+# Check the requirements
+checkRequirements()
 
-    # Perform all the checks before downloading the video
-    try:
-        performChecks(args.__dict__)
-    except Exception as e:
-        printCriticalError(str(e))
+# Perform all the checks before downloading the video
+try:
+performChecks(args.__dict__)
+except Exception as e:
+printCriticalError(str(e))
 
-    # Normal mode - convert Audacity Labels to Glyphs format
-    audacity_to_glyphs(args.FILE[0], args.disableCompatibility, args.watermark[0] if args.watermark is not None else None)
+# Normal mode - convert Audacity Labels to Glyphs format
+audacity_to_glyphs(args.FILE[0], args.disableCompatibility, args.watermark[0] if args.watermark is not None else None)
 
-    cprint("Done!", color="green", attrs=["bold"])
+cprint("Done!", color="green", attrs=["bold"])
 
-    return 0
+return 0
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except KeyboardInterrupt:
-        printCriticalError("Interrupted by user.", 130)
-    # except Exception as e:
-    #     printCriticalError(str(e))
+try:
+sys.exit(main())
+except KeyboardInterrupt:
+printCriticalError("Interrupted by user.", 130)
+# except Exception as e:
+# printCriticalError(str(e))
