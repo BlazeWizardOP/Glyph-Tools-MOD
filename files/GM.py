@@ -211,71 +211,71 @@ return (watermarkData, authorData)
 # Returns the watermark (if present, else None) and the author data from the file
 def read_author_file(file: str) -> (bytes, bytes):
 with open(file, 'rb') as f:
-        data = f.read()
+data = f.read()
 
-    # Find the last occurence of the watermark marker
-    watermarkData, authorData = split_watermark_from_author(data)
+# Find the last occurence of the watermark marker
+watermarkData, authorData = split_watermark_from_author(data)
 
-    if watermarkData == None:
-        return (None, authorData)
+if watermarkData == None:
+return (None, authorData)
 
-    # Get number of columns
-    if get_mode(data) == GlobalMode.Compatibility:
-        columns = 5
-    else:
-        columns = 33
+# Get number of columns
+if get_mode(data) == GlobalMode.Compatibility:
+columns = 5
+else:
+columns = 33
 
-    # Get number of rows of the watermark
-    watermarkRows = int(watermark_get_length(watermarkData) / columns) + 1
-    if len(watermarkData.splitlines()) < watermarkRows:
-        printCriticalError("Watermark length is longer than the file. Please check the file.")
+# Get number of rows of the watermark
+watermarkRows = int(watermark_get_length(watermarkData) / columns) + 1
+if len(watermarkData.splitlines()) < watermarkRows:
+printCriticalError("Watermark length is longer than the file. Please check the file.")
 
-    return (watermarkData, authorData)
+return (watermarkData, authorData)
 
 def write_metadata(file: str, author_file: str, custom1_file: str, custom_title: str, ffmpeg: str):
-    watermark, author = read_author_file(author_file)
-    with open(custom1_file, 'rb') as f:
-        custom1 = f.read()
+watermark, author = read_author_file(author_file)
+with open(custom1_file, 'rb') as f:
+custom1 = f.read()
 
-    if author == "" or custom1 == "":
-        printCriticalError("AUTHOR or CUSTOM1 metadata is empty. Please check the files.")
+if author == "" or custom1 == "":
+printCriticalError("AUTHOR or CUSTOM1 metadata is empty. Please check the files.")
 
-    if watermark:
-        try:
-            decodedWatermark = decode_watermark(watermark)
-        except:
-            printCriticalError("Watermark decoding failed. Please check the file.")
+if watermark:
+try:
+decodedWatermark = decode_watermark(watermark)
+except:
+printCriticalError("Watermark decoding failed. Please check the file.")
         
-        # Print the watermark
-        printInfo("Watermark by creator detected - always give credit to the creator!")
-        print(decodedWatermark + '\n')
+# Print the watermark
+printInfo("Watermark by creator detected - always give credit to the creator!")
+print(decodedWatermark + '\n')
 
-    # Compress the strings with zlib
-    compressed_author = zlib.compress(author, zlib.Z_BEST_COMPRESSION)
-    compressed_custom1 = zlib.compress(custom1, zlib.Z_BEST_COMPRESSION)
+# Compress the strings with zlib
+compressed_author = zlib.compress(author, zlib.Z_BEST_COMPRESSION)
+compressed_custom1 = zlib.compress(custom1, zlib.Z_BEST_COMPRESSION)
 
-    # Encode
-    encoded_author = encode_base64(compressed_author)
-    encoded_custom1 = encode_base64(compressed_custom1)
+# Encode
+encoded_author = encode_base64(compressed_author)
+encoded_custom1 = encode_base64(compressed_custom1)
 
-    # New line every 76 characters (76 character is the new line character)
-    encoded_author = '\n'.join(encoded_author[i:i+76] for i in range(0, len(encoded_author), 76))
-    encoded_custom1 = '\n'.join(encoded_custom1[i:i+76] for i in range(0, len(encoded_custom1), 76))
+# New line every 76 characters (76 character is the new line character)
+encoded_author = '\n'.join(encoded_author[i:i+76] for i in range(0, len(encoded_author), 76))
+encoded_custom1 = '\n'.join(encoded_custom1[i:i+76] for i in range(0, len(encoded_custom1), 76))
 
-    # Tmp file name
-    split_file = os.path.splitext(file)
-    tmp_file = split_file[0] + '_new' + split_file[1]
+# Tmp file name
+split_file = os.path.splitext(file)
+tmp_file = split_file[0] + '_new' + split_file[1]
 
-    # Set the metadata
-    ffmpegMetadata = {'TITLE': custom_title, 'ALBUM': 'CUSTOM', 'AUTHOR': encoded_author, 'COMPOSER': 'Spacewar Glyph Composer', 'CUSTOM1': encoded_custom1, 'CUSTOM2': '', 'GLYPHER_WATERMARK': ''}
-    if get_mode(author) == GlobalMode.Compatibility:
-        # Write the metadata back to the file (5 Glyphs)
-        printInfo(f"Auto detected Phone (1) and Phone (2) compatibility mode.")
-    else:
-        # Write the metadata back to the file (33 Zones)
-        printInfo(f"Auto detected Phone (2) mode.")
-        ffmpegMetadata['COMPOSER'] = 'Pong Glyph Composer'
-        ffmpegMetadata['CUSTOM2'] = '33cols'
+# Set the metadata
+ffmpegMetadata = {'TITLE': custom_title, 'ALBUM': 'CUSTOM', 'AUTHOR': encoded_author, 'COMPOSER': 'Spacewar Glyph Composer', 'CUSTOM1': encoded_custom1, 'CUSTOM2': '', 'GLYPHER_WATERMARK': ''}
+if get_mode(author) == GlobalMode.Compatibility:
+# Write the metadata back to the file (5 Glyphs)
+printInfo(f"Auto detected Phone (1) and Phone (2) compatibility mode.")
+else:
+# Write the metadata back to the file (33 Zones)
+printInfo(f"Auto detected Phone (2) mode.")
+ffmpegMetadata['COMPOSER'] = 'Pong Glyph Composer'
+ffmpegMetadata['CUSTOM2'] = '33cols'
     
 # Add the watermark if present
 if watermark != None:
