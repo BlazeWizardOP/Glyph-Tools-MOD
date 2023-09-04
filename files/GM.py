@@ -91,15 +91,15 @@ sys.exit(exitCode)
 
 # Print error message
 def printError(message, start: str = ""):
-    cprint(start + "ERROR: " + message, color="red", attrs=["bold"], file=sys.stderr)
+cprint(start + "ERROR: " + message, color="red", attrs=["bold"], file=sys.stderr)
 
 # Print warning message
 def printWarning(message, start: str = ""):
-    cprint(start + "WARNING: " + message, color="yellow", attrs=["bold"])
+cprint(start + "WARNING: " + message, color="yellow", attrs=["bold"])
 
 # Print info message
 def printInfo(message, start: str = ""):
-    cprint(start + "INFO: " + message, color="cyan")
+cprint(start + "INFO: " + message, color="cyan")
 
 # +------------------------------------+
 # |                                    |
@@ -108,43 +108,43 @@ def printInfo(message, start: str = ""):
 # +------------------------------------+
 
 def decode_base64(encoded_string: str) -> bytes:
-    return base64.b64decode(encoded_string + base64_padding)
+return base64.b64decode(encoded_string + base64_padding)
 
 def encode_base64(bytes: bytes) -> str:
-    return base64.b64encode(bytes).decode('utf-8').removesuffix(base64_padding)
+return base64.b64encode(bytes).decode('utf-8').removesuffix(base64_padding)
 
 def get_mode(data: bytes) -> GlobalMode:
-    # Detect the mode by simply counting the commas (5 Glyphs = Compatibility, 33 Zones = Phone2)
-    if data.splitlines()[0].count(b',') < 32:
-        return GlobalMode.Compatibility
-    else:
-        return GlobalMode.Phone2
+# Detect the mode by simply counting the commas (5 Glyphs = Compatibility, 33 Zones = Phone2)
+if data.splitlines()[0].count(b',') < 32:
+return GlobalMode.Compatibility
+else:
+return GlobalMode.Phone2
 
 def ffmpeg_write_metadata(ffmpeg: str, file: str, tmp_file: str, metadata: dict[str, str]):
-    # Beginning of the ffmpeg command
-    ffmpeg_command = [ffmpeg, '-v', 'quiet', '-i', file]
+# Beginning of the ffmpeg command
+ffmpeg_command = [ffmpeg, '-v', 'quiet', '-i', file]
 
-    # Loop through the metadata and add it to the ffmpeg command
-    for key_escaped, value_escaped in metadata.items():
-        ffmpeg_command += ['-metadata:s:a:0', f'{key_escaped}={value_escaped}']
+# Loop through the metadata and add it to the ffmpeg command
+for key_escaped, value_escaped in metadata.items():
+ffmpeg_command += ['-metadata:s:a:0', f'{key_escaped}={value_escaped}']
     
-    # Add the end parameters to the ffmpeg command
-    ffmpeg_command += ['-c', 'copy', '-y', '-fflags', '+bitexact', '-flags:v', '+bitexact', '-flags:a', '+bitexact', tmp_file]
+# Add the end parameters to the ffmpeg command
+ffmpeg_command += ['-c', 'copy', '-y', '-fflags', '+bitexact', '-flags:v', '+bitexact', '-flags:a', '+bitexact', tmp_file]
 
-    # If OS is Windows and the ffmpeg command is longer than 32764 characters, we need to save the metadata to a file and pass it to ffmpeg
-    if os.name == 'nt' and len(' '.join(ffmpeg_command)) > 32764:
-        # Print info
-        printInfo("ffmpeg command is longer than 32764 characters which is the limit on Windows. Saving metadata to file and passing it to ffmpeg.")
+# If OS is Windows and the ffmpeg command is longer than 32764 characters, we need to save the metadata to a file and pass it to ffmpeg
+if os.name == 'nt' and len(' '.join(ffmpeg_command)) > 32764:
+# Print information
+printInfo("ffmpeg command is longer than 32764 characters which is the limit on Windows. Saving metadata to file and passing it to ffmpeg.")
         
-        # Save the metadata to a file in tmp folder
-        metadata_to_remove: list[str] = []
-        metadata_file = 'FFMETADATAFILE'
-        with open(metadata_file, 'w', newline='\n') as f:
-            f.write(';FFMETADATA1')
-            for key, value in metadata.items():
-                if key == "":
-                    continue
-                if value == "":
+# Save the metadata to a file in tmp folder
+metadata_to_remove: list[str] = []
+metadata_file = 'FFMETADATAFILE'
+with open(metadata_file, 'w', newline='\n') as f:
+f.write(';FFMETADATA1')
+for key, value in metadata.items():
+if key == "":
+continue
+if value == "":
                     # Add to the remove list (this will only be needed when we need to use the metadata file solution)
                     metadata_to_remove.append(key)
                 # Escape '=', ';', '#', '\', '\n' in the key and value
