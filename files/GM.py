@@ -361,27 +361,27 @@ def read_metadata(file: str, ffprobe: str):
 
 # Encode the watermark to the AUTHOR format
 def encode_watermark(watermark: str, numColumns: int) -> list[list[int]]:
-    watermark: bytes = zlib.compress(bytes(watermark, 'utf-8'), zlib.Z_BEST_COMPRESSION)
+watermark: bytes = zlib.compress(bytes(watermark, 'utf-8'), zlib.Z_BEST_COMPRESSION)
     
-    output: list[list[int]] = [[0 for x in range(numColumns)]]
-    # Add header
-    output[0][0] = 4081
-    output[0][1] = len(watermark)
-    # Process the watermark
-    for i, byte in enumerate(watermark):
-        # Offset i by 2 because of the header
-        i += 2
-        # Calculate the row and column
-        row = int(i / numColumns)
-        column = i % numColumns
-        # Check if we need a new row
-        if len(output) <= row:
-            output.append([0 for x in range(numColumns)])
-        # Write the byte
-        output[row][column] = byte
+output: list[list[int]] = [[0 for x in range(numColumns)]]
+# Add header
+output[0][0] = 4081
+output[0][1] = len(watermark)
+# Process the watermark
+for i, byte in enumerate(watermark):
+# Offset i by 2 because of the header
+i += 2
+# Calculate the row and column
+row = int(i / numColumns)
+column = i % numColumns
+# Check if we need a new row
+if len(output) <= row:
+output.append([0 for x in range(numColumns)])
+# Write the byte
+output[row][column] = byte
     
-    # Return the output
-    return output
+# Return the output
+return output
 
 # +------------------------------------+
 # |                                    |
