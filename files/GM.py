@@ -145,19 +145,19 @@ for key, value in metadata.items():
 if key == "":
 continue
 if value == "":
-                    # Add to the remove list (this will only be needed when we need to use the metadata file solution)
-                    metadata_to_remove.append(key)
-                # Escape '=', ';', '#', '\', '\n' in the key and value
-                key_escaped = key.replace('\\', '\\\\').replace('=', '\\=').replace(';', '\\;').replace('#', '\\#').replace('\n', '\\\n')
-                value_escaped = value.replace('\\', '\\\\').replace('=', '\\=').replace(';', '\\;').replace('#', '\\#').replace('\n', '\\\n')
-                f.write(f'\n{key_escaped}={value_escaped}')
+# Add to the remove list (this will only be needed when we need to use the metadata file solution)
+metadata_to_remove.append(key)
+# Escape '=', ';', '#', '\', '\n' in the key and value
+key_escaped = key.replace('\\', '\\\\').replace('=', '\\=').replace(';', '\\;').replace('#', '\\#').replace('\n', '\\\n')
+value_escaped = value.replace('\\', '\\\\').replace('=', '\\=').replace(';', '\\;').replace('#', '\\#').replace('\n', '\\\n')
+f.write(f'\n{key_escaped}={value_escaped}')
         
-        # Build new ffmpeg command
-        ffmpeg_command = [ffmpeg, '-v', 'quiet', '-i', file, '-i', metadata_file, '-c', 'copy', '-y', '-map_metadata', '1']
-        for m in metadata_to_remove:
-            # The tag gets removed if it is already present in the input file metadata (does not work with just the file pass method)
-            ffmpeg_command += ['-metadata:s:a:0', f"{m}="]
-        ffmpeg_command += ['-fflags', '+bitexact', '-flags:v', '+bitexact', '-flags:a', '+bitexact', tmp_file]
+# Build new ffmpeg command
+ffmpeg_command = [ffmpeg, '-v', 'quiet', '-i', file, '-i', metadata_file, '-c', 'copy', '-y', '-map_metadata', '1']
+for m in metadata_to_remove:
+# The tag gets removed if it is already present in the input file metadata (does not work with just the file pass method)
+ffmpeg_command += ['-metadata:s:a:0', f"{m}="]
+ffmpeg_command += ['-fflags', '+bitexact', '-flags:v', '+bitexact', '-flags:a', '+bitexact', tmp_file]
 
         # Run new ffmpeg command
         subprocess.run(ffmpeg_command)
