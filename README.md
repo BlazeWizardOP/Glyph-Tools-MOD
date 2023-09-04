@@ -46,3 +46,8 @@ THANKS! :)
 --------------------------------------------------------------------------------
 
 # Tutorial
+- Download this repository files manually or via git.
+- Codes for git users:
+```
+git clone https://github.com/BlazeWizardOP/Glyph-Tools-MOD.git
+``` 
