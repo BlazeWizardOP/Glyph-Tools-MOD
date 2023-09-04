@@ -390,28 +390,28 @@ def encode_watermark(watermark: str, numColumns: int) -> list[list[int]]:
 # +------------------------------------+
 
 def main() -> int:
-    # Parse the arguments
-    args = buildArgumentsParser().parse_args()
+# Parse the arguments
+args = buildArgumentsParser().parse_args()
 
-    # Check the requirements
-    checkRequirements(args.ffmpeg[0], args.ffprobe[0], bool(args.w))
+# Check the requirements
+checkRequirements(args.ffmpeg[0], args.ffprobe[0], bool(args.w))
 
-    # Perform all the checks before downloading the video
-    try:
-        performChecks(args.__dict__)
-    except Exception as e:
-        printCriticalError(str(e))
+# Perform all the checks before downloading the video
+try:
+performChecks(args.__dict__)
+except Exception as e:
+printCriticalError(str(e))
 
-    if args.w:
-        # Write the metadata back to the file
-        write_metadata(args.FILE[0], args.w[0], args.w[1], args.t[0], args.ffmpeg[0])
-    else:
-        # Read the metadata from the file
-        read_metadata(args.FILE[0], args.ffprobe[0])
+if args.w:
+# Write the metadata back to the file
+write_metadata(args.FILE[0], args.w[0], args.w[1], args.t[0], args.ffmpeg[0])
+else:
+# Read the metadata from the file
+read_metadata(args.FILE[0], args.ffprobe[0])
 
-    cprint("Done!", color="green", attrs=["bold"])
+cprint("Done!", color="green", attrs=["bold"])
 
-    return 0
+return 0
 
 if __name__ == "__main__":
 try:
