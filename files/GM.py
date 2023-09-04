@@ -32,16 +32,16 @@ GlobalMode = Enum('GlobalMode', ['Compatibility', 'Phone2'])
 
 # Build the arguments parser
 def buildArgumentsParser() -> argparse.ArgumentParser:
-    # Parse the arguments with argparse (https://docs.python.org/3/library/argparse.html)
-    parser = argparse.ArgumentParser(description="Read or write the Glyph metadata from the Nothing Glyph Composer.", epilog="Created by: Sebastian Aigner (aka. SebiAi)")
+# Parse the arguments with argparse (https://docs.python.org/3/library/argparse.html)
+parser = argparse.ArgumentParser(description="Read or write the Glyph metadata from the Nothing Glyph Composer.", epilog="Created by: Sebastian Aigner (aka. SebiAi)")
 
-    parser.add_argument('FILE', help="The file to read from or write to.", type=str, nargs=1)
-    parser.add_argument('-w', help="Write the metadata back from the files instead of reading. - You need to provide the file with the author data first, then the file with the custom1 data.", type=str, nargs=2, metavar=('AUTHOR_FILE', 'CUSTOM1_FILE'))
-    parser.add_argument('-t', help="What title to write into the metadata. (default: 'MyCustomSong')", default=['MyCustomSong'], type=str, nargs=1, metavar=('TITLE'))
-    parser.add_argument('--ffmpeg', help="Path to ffmpeg executable. (default: 'ffmpeg' - looks in PATH)", default=['ffmpeg'], type=str, nargs=1, metavar=('FFMPEG_PATH'))
-    parser.add_argument('--ffprobe', help="Path to ffprobe executable. (default: 'ffprobe' - looks in PATH)", default=['ffprobe'], type=str, nargs=1, metavar=('FFPROBE_PATH'))
+parser.add_argument('FILE', help="The file to read from or write to.", type=str, nargs=1)
+parser.add_argument('-w', help="Write the metadata back from the files instead of reading. - You need to provide the file with the author data first, then the file with the custom1 data.", type=str, nargs=2, metavar=('AUTHOR_FILE', 'CUSTOM1_FILE'))
+parser.add_argument('-t', help="What title to write into the metadata. (default: 'MyCustomSong')", default=['MyCustomSong'], type=str, nargs=1, metavar=('TITLE'))
+parser.add_argument('--ffmpeg', help="Path to ffmpeg executable. (default: 'ffmpeg' - looks in PATH)", default=['ffmpeg'], type=str, nargs=1, metavar=('FFMPEG_PATH'))
+parser.add_argument('--ffprobe', help="Path to ffprobe executable. (default: 'ffprobe' - looks in PATH)", default=['ffprobe'], type=str, nargs=1, metavar=('FFPROBE_PATH'))
 
-    return parser
+return parser
 
 # +------------------------------------+
 # |                                    |
