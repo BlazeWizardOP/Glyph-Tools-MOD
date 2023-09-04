@@ -53,20 +53,20 @@ return parser
 
 # Check the requirements
 def checkRequirements(ffmpeg: str, ffprobe: str, write: bool):
-    if write:
-        try:
-            # Check if ffmpeg is installed - write metadata
-            if subprocess.run([ffmpeg, "-version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode != 0:
-                printCriticalError(f"ffmpeg could not be found. ({ffmpeg})")
-        except FileNotFoundError:
-            printCriticalError(f"ffmpeg could not be found. ({ffmpeg})")
-    else:
-        try:
-            # Check if ffprobe is installed - read metadata
-            if subprocess.run([ffprobe, "-version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode != 0:
-                printCriticalError(f"ffprobe could not be found. ({ffprobe})")
-        except FileNotFoundError:
-            printCriticalError(f"ffprobe could not be found. ({ffprobe})")
+if write:
+try:
+# Check if ffmpeg is installed - write metadata
+if subprocess.run([ffmpeg, "-version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode != 0:
+printCriticalError(f"ffmpeg could not be found. ({ffmpeg})")
+except FileNotFoundError:
+printCriticalError(f"ffmpeg could not be found. ({ffmpeg})")
+else:
+try:
+# Check if ffprobe is installed - read metadata
+if subprocess.run([ffprobe, "-version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode != 0:
+printCriticalError(f"ffprobe could not be found. ({ffprobe})")
+except FileNotFoundError:
+printCriticalError(f"ffprobe could not be found. ({ffprobe})")
 
 
 # Perform argument checks
