@@ -183,34 +183,34 @@ return int(watermarkData[5:to])
 
 # Returns the decoded watermark
 def decode_watermark(watermarkData: bytes) -> str:
-    if watermarkData.find(b'4081') == -1 or len(watermarkData) == 0:
-        raise ValueError("Watermark not found in the data.")
+if watermarkData.find(b'4081') == -1 or len(watermarkData) == 0:
+raise ValueError("Watermark not found in the data.")
 
-    # Get the length of the watermark
-    length = watermark_get_length(watermarkData)
+# Get the length of the watermark
+length = watermark_get_length(watermarkData)
     
-    # Read the watermark as csv
-    csvReader = csv.reader(watermarkData.decode('utf-8').splitlines(), delimiter=',', strict=True)
-    # Flatten the list, remove empty strings convert to int, trim to the length of the watermark and convert to bytes
-    data = bytes([int(x) for y in csvReader for x in y if x != ''][2:length + 2])
+# Read the watermark as csv
+csvReader = csv.reader(watermarkData.decode('utf-8').splitlines(), delimiter=',', strict=True)
+# Flatten the list, remove empty strings convert to int, trim to the length of the watermark and convert to bytes
+data = bytes([int(x) for y in csvReader for x in y if x != ''][2:length + 2])
 
-    return zlib.decompress(data).decode('utf-8')
+return zlib.decompress(data).decode('utf-8')
 
 # Returns the watermark (if present, else None) and the author data from the data
 def split_watermark_from_author(data: bytes) -> (bytes, bytes):
-    # Check if we don't have a watermark or the data is empty
-    if data.find(b'4081') == -1 or len(data) == 0:
-        return (None, data)
+# Check if we don't have a watermark or the data is empty
+if data.find(b'4081') == -1 or len(data) == 0:
+return (None, data)
     
-    startIndex = data.rfind(b'4081')
-    watermarkData = data[startIndex:]
-    authorData = data[:startIndex]
+startIndex = data.rfind(b'4081')
+watermarkData = data[startIndex:]
+authorData = data[:startIndex]
 
-    return (watermarkData, authorData)
+return (watermarkData, authorData)
 
 # Returns the watermark (if present, else None) and the author data from the file
 def read_author_file(file: str) -> (bytes, bytes):
-    with open(file, 'rb') as f:
+with open(file, 'rb') as f:
         data = f.read()
 
     # Find the last occurence of the watermark marker
