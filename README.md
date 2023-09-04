@@ -2,6 +2,8 @@
 - Developed By: [@SebiAi](https://github.com/SebiAi)
 - Modified By: [@BlazeWizardOP](https://github.com/BlazeWizardOP)
 
+--------------------------------------------------------------------------------
+
 ## Why Is This Project Modified?
 - Focused On For Windows Users & Much More
 - Some Things Modified For Better Usage Of This Tool.
@@ -31,6 +33,8 @@ THANKS! :)
 [>] Nothing Phone (2)
 ```
 
+--------------------------------------------------------------------------------
+
 ## Links
 - Original Tutorial | [Here](https://www.youtube.com/watch?v=YlJBqQxSgWA)
 - Sample Video      | [Here](https://github.com/SebiAi/custom-nothing-glyph-tools/assets/41116921/1852f2a6-1cf9-4c0e-9835-792bf1b09a58)
@@ -38,3 +42,7 @@ THANKS! :)
 - ffmpeg            | [Here](https://ffmpeg.org/download.html)
 - ffprobe           | [Here](https://ffmpeg.org/download.html)
 - Audacity          | [Here](https://www.audacityteam.org/)
+
+--------------------------------------------------------------------------------
+
+# Tutorial
