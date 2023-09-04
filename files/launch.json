@@ -27,10 +27,10 @@
                 "Examples/Compatibility mode/Ricky/Ricky.txt"]
         },
         {
-            "name": "GlyphModder write",
+            "name": "GM write",
             "type": "python",
             "request": "launch",
-            "program": "GlyphModder.py",
+            "program": "GM.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
@@ -42,10 +42,10 @@
                 "Ricky.ogg"]
         },
         {
-            "name": "GlyphModder read",
+            "name": "GM read",
             "type": "python",
             "request": "launch",
-            "program": "GlyphModder.py",
+            "program": "GM.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
