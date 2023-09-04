@@ -277,87 +277,87 @@ def write_metadata(file: str, author_file: str, custom1_file: str, custom_title:
         ffmpegMetadata['COMPOSER'] = 'Pong Glyph Composer'
         ffmpegMetadata['CUSTOM2'] = '33cols'
     
-    # Add the watermark if present
-    if watermark != None:
-        ffmpegMetadata['GLYPHER_WATERMARK'] = decodedWatermark
+# Add the watermark if present
+if watermark != None:
+ffmpegMetadata['GLYPHER_WATERMARK'] = decodedWatermark
 
-    # Write the metadata back to the file
-    ffmpeg_write_metadata(ffmpeg, file, tmp_file, ffmpegMetadata)
+# Write the metadata back to the file
+ffmpeg_write_metadata(ffmpeg, file, tmp_file, ffmpegMetadata)
 
-    # Print number of bytes written
-    print(f"Wrote {colored(len(bytearray(encoded_author, 'utf-8')), attrs=['bold'])} bytes of AUTHOR metadata")
-    print(f"Wrote {colored(len(bytearray(encoded_custom1, 'utf-8')), attrs=['bold'])} bytes of CUSTOM1 metadata")
+# Print number of bytes written
+print(f"Wrote {colored(len(bytearray(encoded_author, 'utf-8')), attrs=['bold'])} bytes of AUTHOR metadata")
+print(f"Wrote {colored(len(bytearray(encoded_custom1, 'utf-8')), attrs=['bold'])} bytes of CUSTOM1 metadata")
 
 def read_metadata(file: str, ffprobe: str):
-    # Get the metadata from the file with ffmpeg (first audio stream only)
-    ffprobe_json = json.loads(subprocess.check_output([ffprobe, '-v', 'quiet', '-of', 'json', '-show_streams', '-select_streams', 'a:0', file]).decode('utf-8'))
+# Get the metadata from the file with ffmpeg (first audio stream only)
+ffprobe_json = json.loads(subprocess.check_output([ffprobe, '-v', 'quiet', '-of', 'json', '-show_streams', '-select_streams', 'a:0', file]).decode('utf-8'))
 
-    try:
-        author = str(ffprobe_json['streams'][0]['tags']['AUTHOR'])
-        custom1 = str(ffprobe_json['streams'][0]['tags']['CUSTOM1'])
-    except KeyError:
-        printCriticalError("AUTHOR or CUSTOM1 metadata is missing. Please check the file.")
+try:
+author = str(ffprobe_json['streams'][0]['tags']['AUTHOR'])
+custom1 = str(ffprobe_json['streams'][0]['tags']['CUSTOM1'])
+except KeyError:
+printCriticalError("AUTHOR or CUSTOM1 metadata is missing. Please check the file.")
 
-    if author == "" or custom1 == "":
-        printCriticalError("AUTHOR or CUSTOM1 metadata is empty. Please check the file.")
+if author == "" or custom1 == "":
+printCriticalError("AUTHOR or CUSTOM1 metadata is empty. Please check the file.")
 
-    # Get watermark if present
-    try:
-        watermark = str(ffprobe_json['streams'][0]['tags']['GLYPHER_WATERMARK'])
-        printInfo("Watermark by creator detected - always give credit to the creator!")
-        print(watermark + '\n')
-    except KeyError:
-        watermark = None
+# Get watermark if present
+try:
+watermark = str(ffprobe_json['streams'][0]['tags']['GLYPHER_WATERMARK'])
+printInfo("Watermark by creator detected - always give credit to the creator!")
+print(watermark + '\n')
+except KeyError:
+watermark = None
 
-    # Print number of bytes read
-    print(f"Read {colored(len(bytearray(author, 'utf-8')), attrs=['bold'])} bytes of AUTHOR metadata")
-    print(f"Read {colored(len(bytearray(custom1, 'utf-8')), attrs=['bold'])} bytes of CUSTOM1 metadata")
+# Print number of bytes read
+print(f"Read {colored(len(bytearray(author, 'utf-8')), attrs=['bold'])} bytes of AUTHOR metadata")
+print(f"Read {colored(len(bytearray(custom1, 'utf-8')), attrs=['bold'])} bytes of CUSTOM1 metadata")
 
-    # Decode
-    decoded_author = decode_base64(author)
-    decoded_custom1 = decode_base64(custom1)
+# Decode
+decoded_author = decode_base64(author)
+decoded_custom1 = decode_base64(custom1)
 
-    # Get the filename from the input
-    filename = os.path.splitext(os.path.basename(sys.argv[1]))[0]
+# Get the filename from the input
+filename = os.path.splitext(os.path.basename(sys.argv[1]))[0]
     
-    # Decompress the decoded strings with zlib
-    decompressed_author = zlib.decompress(decoded_author)
-    decompressed_custom1 = zlib.decompress(decoded_custom1)
+# Decompress the decoded strings with zlib
+decompressed_author = zlib.decompress(decoded_author)
+decompressed_custom1 = zlib.decompress(decoded_custom1)
     
-    # Check if there is a watermark in the author data
-    watermarkDataSplit, decompressed_author = split_watermark_from_author(decompressed_author)
-    if watermarkDataSplit != None:
-        try:
-            watermarkAuthor = decode_watermark(watermarkDataSplit)
-        except:
-            printCriticalError("Watermark decoding failed. Please check the file.")
-        printInfo("Watermark by creator detected in author data - always give credit to the creator!")
-        print(watermarkAuthor + '\n')
+# Check if there is a watermark in the author data
+watermarkDataSplit, decompressed_author = split_watermark_from_author(decompressed_author)
+if watermarkDataSplit != None:
+try:
+watermarkAuthor = decode_watermark(watermarkDataSplit)
+except:
+printCriticalError("Watermark decoding failed. Please check the file.")
+printInfo("Watermark by creator detected in author data - always give credit to the creator!")
+print(watermarkAuthor + '\n')
     
-    # Get watermark data (combine if we have two watermarks)
-    nColumns = 5 if get_mode(decompressed_author) == GlobalMode.Compatibility else 33
-    if watermark and watermarkDataSplit:
-        printInfo("Combining watermarks...")
-        watermarkData = encode_watermark(f"{watermark}\n\n{watermarkAuthor}", nColumns)
-    elif watermark:
-        watermarkData = encode_watermark(watermark, nColumns)
-    elif watermarkDataSplit:
-        watermarkData = encode_watermark(watermarkAuthor, nColumns)
-    else:
-        watermarkData = None
+# Get watermark data (combine if we have two watermarks)
+nColumns = 5 if get_mode(decompressed_author) == GlobalMode.Compatibility else 33
+if watermark and watermarkDataSplit:
+printInfo("Combining watermarks...")
+watermarkData = encode_watermark(f"{watermark}\n\n{watermarkAuthor}", nColumns)
+elif watermark:
+watermarkData = encode_watermark(watermark, nColumns)
+elif watermarkDataSplit:
+watermarkData = encode_watermark(watermarkAuthor, nColumns)
+else:
+watermarkData = None
 
-    # Write the decoded and decompressed strings to a file
-    with open(f"{filename}.glypha", 'wb') as f:
-        f.write(decompressed_author)
-        if not decompressed_author.endswith(b'\r\n'):
-            f.write(b'\r\n')
+# Write the decoded and decompressed strings to a file
+with open(f"{filename}.glypha", 'wb') as f:
+f.write(decompressed_author)
+if not decompressed_author.endswith(b'\r\n'):
+f.write(b'\r\n')
 
-    if watermarkData:
-        with open(f"{filename}.glypha", "a", newline='') as authorFile:
-            csv.writer(authorFile, delimiter=',', lineterminator=',\r\n', strict=True).writerows(watermarkData)
+if watermarkData:
+with open(f"{filename}.glypha", "a", newline='') as authorFile:
+csv.writer(authorFile, delimiter=',', lineterminator=',\r\n', strict=True).writerows(watermarkData)
 
-    with open(f"{filename}.glyphc1", 'wb') as f:
-        f.write(decompressed_custom1)
+with open(f"{filename}.glyphc1", 'wb') as f:
+f.write(decompressed_custom1)
 
 # Encode the watermark to the AUTHOR format
 def encode_watermark(watermark: str, numColumns: int) -> list[list[int]]:
@@ -419,4 +419,4 @@ sys.exit(main())
 except KeyboardInterrupt:
 printCriticalError("Interrupted by user.", 130)
 # except Exception as e:
-#     printCriticalError(str(e))
+# printCriticalError(str(e))
